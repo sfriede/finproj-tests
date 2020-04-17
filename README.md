@@ -27,6 +27,8 @@ You can pull the latest changes from this repository into your local clone of yo
 git pull https://github.com/jhuintprog/finproj-tests.git master
 ```
 
+You will want to run the `pull` command above periodically so that your repository stays current with the latest contributions.  When updated tests arrive, you can copy them into your team repository in order to try them out.
+
 **Important**: this is a public git repository, and if you submit a pull request and we accept it, your name and email will be in the commit history! If you would like to submit an improved test program privately, you can email it to [daveho@cs.jhu.edu](mailto:daveho@cs.jhu.edu), and we will merge it. Please use the email subject "final project unit test contribution".
 
 The [data](data) directory has example game files.  You are also welcome to contribute your game files, using the procedures described above.
