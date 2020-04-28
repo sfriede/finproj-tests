@@ -12,6 +12,8 @@ If you would like to contribute your improvements, please do the following:
 3. Commit your improvements to your fork
 4. Create a pull request
 
+We even made a video showing how to do this! Just click on this link: <https://youtu.be/LktYVsVcyks>.
+
 We will periodically merge pull requests, so you should occasionally pull changes from this repository to make sure you have the latest versions of each test program.
 
 If you would like help using or contributing to the public tests, please post a question on Piazza.
