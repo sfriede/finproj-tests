@@ -34,8 +34,8 @@ TestObjs *setup() {
   objs->game1 = new Game();
   Maze *maze = readFromString(m1);
   objs->game1->setMaze(maze);
-	TextUI *t_ui = new TextUI();
-	objs->game1->setUI(t_ui);
+  TextUI *t_ui = new TextUI();
+  objs->game1->setUI(t_ui);
 
   // Create an Entity with a ScriptedControl as its controller,
   // so we can simulate a series of moves.
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
   TEST(testGetEntitiesWithProperty);
   TEST(testTakeTurn);
   TEST(testChaseHero1);
-	TEST(testTextUIRender);
+  TEST(testTextUIRender);
 
   TEST_FINI();
 }
@@ -194,27 +194,27 @@ void testChaseHero1(TestObjs *objs) {
 }
 
 void testTextUIRender(TestObjs *objs) {
-	//redirect cout to a string stream
-	std::stringstream renderOutput;
-	std::streambuf *coutbuf = std::cout.rdbuf();
-	std::cout.rdbuf(renderOutput.rdbuf());
-	//call render
-	objs->game1->getUI()->render(objs->game1);
-	//direct cout back to cout
-	std::cout.rdbuf(coutbuf);
+  //redirect cout to a string stream
+  std::stringstream renderOutput;
+  std::streambuf *coutbuf = std::cout.rdbuf();
+  std::cout.rdbuf(renderOutput.rdbuf());
+  //call render
+  objs->game1->getUI()->render(objs->game1);
+  //direct cout back to cout
+  std::cout.rdbuf(coutbuf);
 
-	//Sanity Checks
-	//std::cout << renderOutput.str() << std::endl;
-	//std::cout << objs->OGMaze << std::endl;
+  //Sanity Checks
+  //std::cout << renderOutput.str() << std::endl;
+  //std::cout << objs->OGMaze << std::endl;
 
-	std::string expected_maze = 
-	"##########\n"
+  std::string expected_maze = 
+  "##########\n"
   "#........#\n"
   "#.###....#\n"
   "#.#......#\n"
   "#.....<..#\n"
   "##########\n";
 
-	ASSERT(renderOutput.str() == expected_maze);
+  ASSERT(renderOutput.str() == expected_maze);
 
 }
