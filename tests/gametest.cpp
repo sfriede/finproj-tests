@@ -3,6 +3,7 @@
 #include "position.h"
 #include "tile.h"
 #include "maze.h"
+#include "textui.h"
 #include "entity.h"
 #include "scriptedcontrol.h"
 #include "chasehero.h"
@@ -33,6 +34,8 @@ TestObjs *setup() {
   objs->game1 = new Game();
   Maze *maze = readFromString(m1);
   objs->game1->setMaze(maze);
+  TextUI *t_ui = new TextUI();
+  objs->game1->setUI(t_ui);
 
   // Create an Entity with a ScriptedControl as its controller,
   // so we can simulate a series of moves.
@@ -75,6 +78,7 @@ void cleanup(TestObjs *objs) {
 void testGetEntitiesWithProperty(TestObjs *objs);
 void testTakeTurn(TestObjs *objs);
 void testChaseHero1(TestObjs *objs);
+void testTextUIRender(TestObjs *objs);
 
 int main(int argc, char *argv[]) {
   TEST_INIT();
@@ -87,6 +91,7 @@ int main(int argc, char *argv[]) {
   TEST(testGetEntitiesWithProperty);
   TEST(testTakeTurn);
   TEST(testChaseHero1);
+  TEST(testTextUIRender);
 
   TEST_FINI();
 }
@@ -186,4 +191,30 @@ void testChaseHero1(TestObjs *objs) {
   // minotaur would prefer to move vertically, but can't, so moves horizontally
   game2->takeTurn(minotaur);
   ASSERT(Position(1, 4) == minotaur->getPosition());
+}
+
+void testTextUIRender(TestObjs *objs) {
+  //redirect cout to a string stream
+  std::stringstream renderOutput;
+  std::streambuf *coutbuf = std::cout.rdbuf();
+  std::cout.rdbuf(renderOutput.rdbuf());
+  //call render
+  objs->game1->getUI()->render(objs->game1);
+  //direct cout back to cout
+  std::cout.rdbuf(coutbuf);
+
+  //Sanity Checks
+  //std::cout << renderOutput.str() << std::endl;
+  //std::cout << objs->OGMaze << std::endl;
+
+  std::string expected_maze = 
+  "##########\n"
+  "#........#\n"
+  "#.###....#\n"
+  "#.#......#\n"
+  "#.....<..#\n"
+  "##########\n";
+
+  ASSERT(renderOutput.str() == expected_maze);
+
 }
