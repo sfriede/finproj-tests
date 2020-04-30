@@ -1,6 +1,6 @@
 // Note: uncomment the following #define if you would like to use
 // the test(s) for the TextUI class
-#define USE_TEXTUI_TESTS
+//#define USE_TEXTUI_TESTS
 
 // If you do define USE_TEXTUI_TESTS, then you will need to make the
 // following (minor) changes to your project:
