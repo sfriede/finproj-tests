@@ -2,14 +2,18 @@
 #include "tctestpp.h"
 #include "position.h"
 #include "tile.h"
-#include "tilefactory.h"
+#include "textui.h"
 #include "maze.h"
+#include <iostream>
+#include "tilefactory.h"
+
+using std::cout; using std::endl;
 
 Maze *readFromString(const std::string &s) {
   std::stringstream ss(s);
   return Maze::read(ss);
 }
-
+//good maze data
 const char *m1 =
   "10 6\n"
   "##########\n"
@@ -19,25 +23,54 @@ const char *m1 =
   "#.....<..#\n"
   "##########\n";
 
+//bad maze data
+const char *m2 =
+  "9 6\n"
+  "##########\n"
+  "#........#\n"
+  "#.###....#\n"
+  "#.#......#\n"
+  "#.....<..#\n"
+  "##########\n";
+
+//bad maze data
+const char *m3 =
+  "10 6\n"
+  "##########\n"
+  "#........#\n"
+  "#.*##....#\n"
+  "#.#......#\n"
+  "#.....<..#\n"
+  "##########\n";
+
+
 struct TestObjs {
   Maze *maze1;
+  Maze *maze2;
+  Maze *maze3;
 };
 
 TestObjs *setup() {
   TestObjs *objs = new TestObjs;
   objs->maze1 = readFromString(m1);
+  objs->maze2 = readFromString(m2);
+  objs->maze3 = readFromString(m3);
   return objs;
 }
 
 void cleanup(TestObjs *objs) {
   delete objs->maze1;
+  delete objs->maze2;
+  delete objs->maze3;
   delete objs;
 }
 
 void testGetWidth(TestObjs *objs);
 void testGetHeight(TestObjs *objs);
 void testGetTile(TestObjs *objs);
+void testInBounds(TestObjs *objs);
 void testSetTile(TestObjs *objs);
+void testReadMaze(TestObjs *objs);
 
 int main(int argc, char *argv[]) {
   TEST_INIT();
@@ -50,11 +83,34 @@ int main(int argc, char *argv[]) {
   TEST(testGetWidth);
   TEST(testGetHeight);
   TEST(testGetTile);
+  TEST(testInBounds);
   TEST(testSetTile);
+  TEST(testReadMaze);
 
   TEST_FINI();
 }
 
+void testInBounds(TestObjs *objs){
+  Position p1(11, 5);
+  Position p2(11, 7);
+  Position p3(6, 11);
+  Position p4(4, 3);
+  Position p5(0, -1);
+  ASSERT(!objs->maze1->inBounds(p1));
+  ASSERT(!objs->maze1->inBounds(p2));
+  ASSERT(!objs->maze1->inBounds(p3));
+  ASSERT(objs->maze1->inBounds(p4));
+  ASSERT(!objs->maze1->inBounds(p5));
+}
+void testSetTile(TestObjs *objs){
+  TileFactory *tfac = TileFactory::getInstance();
+  Tile *tile = tfac->createFromChar('.');
+  Position p1(0, 0);
+  objs->maze1->setTile(p1, tile);
+  const Tile *t1 = objs->maze1->getTile(p1);
+  ASSERT(t1->getGlyph() == ".");
+
+}
 void testGetWidth(TestObjs *objs) {
   ASSERT(10 == objs->maze1->getWidth());
 }
@@ -76,15 +132,9 @@ void testGetTile(TestObjs *objs) {
   ASSERT(!p3->isGoal());
 }
 
-void testSetTile(TestObjs *) {
-  Maze *maze = new Maze(10, 5);
+void testReadMaze(TestObjs *objs){
+  ASSERT(!(objs->maze1 == nullptr));
+  ASSERT(objs->maze2 == nullptr);
+  ASSERT(objs->maze3 == nullptr);
 
-  Tile *tile1 = TileFactory::getInstance()->createFromChar('#');
-  Tile *tile2 = TileFactory::getInstance()->createFromChar('.');
-  maze->setTile(Position(0, 0), tile1);
-  ASSERT("#" == maze->getTile(Position(0, 0))->getGlyph());
-  maze->setTile(Position(4, 3), tile2);
-  ASSERT("." == maze->getTile(Position(4, 3))->getGlyph());
-
-  delete maze;
-}
+  }
