@@ -1,9 +1,24 @@
+// Note: uncomment the following #define if you would like to use
+// the test(s) for the TextUI class
+#define USE_TEXTUI_TESTS
+
+// If you do define USE_TEXTUI_TESTS, then you will need to make the
+// following (minor) changes to your project:
+//
+// (1) Delete (or comment out) the line reading
+//       assert(s_instance == nullptr);
+//     in the constructor for the UI class (in ui.cpp).
+//
+// (2) Add build/textui.o to the Makefile target for gametest
+
 #include <sstream>
 #include "tctestpp.h"
 #include "position.h"
 #include "tile.h"
 #include "maze.h"
-#include "textui.h"
+#ifdef USE_TEXTUI_TESTS
+#  include "textui.h"
+#endif // USE_TEXTUI_TESTS
 #include "entity.h"
 #include "scriptedcontrol.h"
 #include "chasehero.h"
@@ -34,8 +49,10 @@ TestObjs *setup() {
   objs->game1 = new Game();
   Maze *maze = readFromString(m1);
   objs->game1->setMaze(maze);
+#ifdef USE_TEXTUI_TESTS
   TextUI *t_ui = new TextUI();
   objs->game1->setUI(t_ui);
+#endif // USE_TEXTUI_TESTS
 
   // Create an Entity with a ScriptedControl as its controller,
   // so we can simulate a series of moves.
@@ -78,7 +95,9 @@ void cleanup(TestObjs *objs) {
 void testGetEntitiesWithProperty(TestObjs *objs);
 void testTakeTurn(TestObjs *objs);
 void testChaseHero1(TestObjs *objs);
+#ifdef USE_TEXTUI_TESTS
 void testTextUIRender(TestObjs *objs);
+#endif // USE_TEXTUI_TESTS
 
 int main(int argc, char *argv[]) {
   TEST_INIT();
@@ -91,7 +110,9 @@ int main(int argc, char *argv[]) {
   TEST(testGetEntitiesWithProperty);
   TEST(testTakeTurn);
   TEST(testChaseHero1);
+#ifdef USE_TEXTUI_TESTS
   TEST(testTextUIRender);
+#endif // USE_TEXTUI_TESTS
 
   TEST_FINI();
 }
@@ -193,6 +214,7 @@ void testChaseHero1(TestObjs *objs) {
   ASSERT(Position(1, 4) == minotaur->getPosition());
 }
 
+#ifdef USE_TEXTUI_TESTS
 void testTextUIRender(TestObjs *objs) {
   //redirect cout to a string stream
   std::stringstream renderOutput;
@@ -211,10 +233,13 @@ void testTextUIRender(TestObjs *objs) {
   "##########\n"
   "#........#\n"
   "#.###....#\n"
-  "#.#......#\n"
+  "#@#......#\n"
   "#.....<..#\n"
   "##########\n";
 
-  ASSERT(renderOutput.str() == expected_maze);
+  std::string rendered = renderOutput.str();
+  //ASSERT(renderOutput.str() == expected_maze);
+  ASSERT(rendered == expected_maze);
 
 }
+#endif // USE_TEXTUI_TESTS
