@@ -2,6 +2,7 @@
 #include "tctestpp.h"
 #include "position.h"
 #include "tile.h"
+#include "tilefactory.h"
 #include "maze.h"
 
 Maze *readFromString(const std::string &s) {
@@ -36,6 +37,7 @@ void cleanup(TestObjs *objs) {
 void testGetWidth(TestObjs *objs);
 void testGetHeight(TestObjs *objs);
 void testGetTile(TestObjs *objs);
+void testSetTile(TestObjs *objs);
 
 int main(int argc, char *argv[]) {
   TEST_INIT();
@@ -48,6 +50,7 @@ int main(int argc, char *argv[]) {
   TEST(testGetWidth);
   TEST(testGetHeight);
   TEST(testGetTile);
+  TEST(testSetTile);
 
   TEST_FINI();
 }
@@ -71,4 +74,17 @@ void testGetTile(TestObjs *objs) {
 
   const Tile *p3 = objs->maze1->getTile(Position(7, 4));
   ASSERT(!p3->isGoal());
+}
+
+void testSetTile(TestObjs *) {
+  Maze *maze = new Maze(10, 5);
+
+  Tile *tile1 = TileFactory::getInstance()->createFromChar('#');
+  Tile *tile2 = TileFactory::getInstance()->createFromChar('.');
+  maze->setTile(Position(0, 0), tile1);
+  ASSERT("#" == maze->getTile(Position(0, 0))->getGlyph());
+  maze->setTile(Position(4, 3), tile2);
+  ASSERT("." == maze->getTile(Position(4, 3))->getGlyph());
+
+  delete maze;
 }
